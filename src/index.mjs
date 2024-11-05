@@ -3,50 +3,63 @@ import xlsx from 'xlsx';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import pkg from 'pg';
+import fs from "fs"
 
 
 const { Client } = pkg;
 
 
 
-const dbConnectionString = 'postgresql://postgres:PcslsggIrqeRlxHqGJXlKPvLsHYpWwgi@junction.proxy.rlwy.net:23442/railway';
+const dbConnectionString = 'postgresql://postgres:MuXbouQYXoElGUtJSwUcGjYujBZiImza@autorack.proxy.rlwy.net:29904/railway';
 
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const excelFilePath = path.join(__dirname, '../data/PL_2000.xlsx');
+const excelFilePath = path.join(__dirname, '../data/PL_separated_by_comma_updated.txt');
 
 
 const readExcelFile = (filePath) => {
-    const workbook = xlsx.readFile(filePath);
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-    const data = xlsx.utils.sheet_to_json(sheet);
-    return data;
+   
+    const convert = fs.readFile(filePath, 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error al leer el archivo:', err);
+            return;
+        }
+        
+        // Separar el contenido por comas
+        const datosSeparados = data.split(',');
+    
+        // Imprimir los datos separados
+        console.log(datosSeparados);
+        return datosSeparados
+    });
+    return convert;
 };
 
 
 const prepareData = (data) => {
-    return data.map(row => {
-        const plValue = row.PL || '';
-        const subjectId = plValue.includes('PL/') ? plValue.split('PL/')[1] : null;
-
-        return {
-            pl: plValue,
-            type: null,
-            socialReason: null,
-            brand: null,
-            group: null,
-            subjectId: subjectId,
-            neo: null,
-            mp: null,
-            address: null,
-            city: null,
-            postalCode: null,
-            state: null,
-            municipality: null
-        };
-    });
+    // return data.map(row => {
+    //     //console.log(row)
+    //     const item = row.replace(/(\r\n|\n|\r)/gm, "");
+    //     const subjectId = item.includes('PL/') ? item.split('PL/')[1] : null;
+    //     console.log(item)
+    //     return {
+    //         pl: item,
+    //         type: "",
+    //         socialReason: "",
+    //         brand: "",
+    //         group: "",
+    //         subjectId: subjectId,
+    //         neo: "",
+    //         mp: "",
+    //         address: "",
+    //         city: "",
+    //         postalCode: "",
+    //         state: "",
+    //         municipality: ""
+    //     };
+    // });
+    console.log(data)
 };
 
 
@@ -59,15 +72,18 @@ const insertDataToPostgres = async (data) => {
 
         await client.connect();
 
-  
         for (const row of data) {
-            await client.query(`
-                INSERT INTO public.'Subjects' (pl, type, socialReason, brand, "group", subjectId, neo, mp, address, city, postalCode, state, municipality)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
-            `, [
-                row.pl, row.type, row.socialReason, row.brand, row.group, row.subjectId,
-                row.neo, row.mp, row.address, row.city, row.postalCode, row.state, row.municipality
-            ]);
+            //console.log("ingresando pl" , row.pl)
+            //console.log(row)
+            // await client.query(`
+            //         INSERT INTO "Subjects" (pl, type, "socialReason", brand, "group", "subjectId", neo, mp, address, city, "postalCode", state, municipality)
+            //         VALUES 
+            //         ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13);
+            // `, [
+            //     row.pl, row.type, row.socialReason, row.brand, row.group, row.subjectId,
+            //     row.neo, row.mp, row.address, row.city, row.postalCode, row.state, row.municipality
+            // ]);
+            //console.log("se agrego el pl")
         }
 
         console.log("Proceso exitoso.");
@@ -80,9 +96,11 @@ const insertDataToPostgres = async (data) => {
 
 
 const main = async () => {
+    
     const excelData = readExcelFile(excelFilePath);
+    console.log(excelData)
     const preparedData = prepareData(excelData);
-    await insertDataToPostgres(preparedData);
+    //await insertDataToPostgres(preparedData);
 };
 
 main();
