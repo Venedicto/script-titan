@@ -73,7 +73,9 @@ const insertDataToPostgres = async (data) => {
         await client.connect();
 
         for (const row of data) {
-            console.log("Ingresando Data", row.pl)
+            console.log(row)
+            console.log("ingresando pl" , row.pl)
+            console.log(row)
             await client.query(`
                     INSERT INTO "Subjects" (pl, type, "socialReason", brand, "group", "subjectId", neo, mp, address, city, "postalCode", state, municipality)
                     VALUES 
