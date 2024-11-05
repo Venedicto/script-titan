@@ -3,7 +3,7 @@ import xlsx from 'xlsx';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import pkg from 'pg';
-import fs from "fs"
+import fs from "fs/promises"
 
 
 const { Client } = pkg;
@@ -18,48 +18,48 @@ const __dirname = path.dirname(__filename);
 const excelFilePath = path.join(__dirname, '../data/PL_separated_by_comma_updated.txt');
 
 
-const readExcelFile = (filePath) => {
-   
-    const convert = fs.readFile(filePath, 'utf8', (err, data) => {
-        if (err) {
-            console.error('Error al leer el archivo:', err);
-            return;
-        }
+const readExcelFile = async (filePath) => {
+    try {
+        // Leer el archivo
+        const data = await fs.readFile(filePath, 'utf8');
         
         // Separar el contenido por comas
         const datosSeparados = data.split(',');
-    
+
         // Imprimir los datos separados
-        console.log(datosSeparados);
         return datosSeparados
-    });
-    return convert;
+    } catch (err) {
+        console.error('Error al leer el archivo:', err);
+    }
+
 };
 
 
 const prepareData = (data) => {
-    // return data.map(row => {
-    //     //console.log(row)
-    //     const item = row.replace(/(\r\n|\n|\r)/gm, "");
-    //     const subjectId = item.includes('PL/') ? item.split('PL/')[1] : null;
-    //     console.log(item)
-    //     return {
-    //         pl: item,
-    //         type: "",
-    //         socialReason: "",
-    //         brand: "",
-    //         group: "",
-    //         subjectId: subjectId,
-    //         neo: "",
-    //         mp: "",
-    //         address: "",
-    //         city: "",
-    //         postalCode: "",
-    //         state: "",
-    //         municipality: ""
-    //     };
-    // });
-    console.log(data)
+   
+    return data.map(row => {
+       
+        const item = row.replace(/(\r\n|\n|\r)/gm, "").trim()
+        const subjectId = item.includes('PL/') ? item.split("/")[1] : ""
+      
+   
+        return {
+            pl: item,
+            type: "",
+            socialReason: "",
+            brand: "",
+            group: "",
+            subjectId: subjectId,
+            neo: "",
+            mp: "",
+            address: "",
+            city: "",
+            postalCode: "",
+            state: "",
+            municipality: ""
+        };
+    });
+   
 };
 
 
@@ -73,6 +73,7 @@ const insertDataToPostgres = async (data) => {
         await client.connect();
 
         for (const row of data) {
+            console.log(row)
             //console.log("ingresando pl" , row.pl)
             //console.log(row)
             // await client.query(`
@@ -97,10 +98,10 @@ const insertDataToPostgres = async (data) => {
 
 const main = async () => {
     
-    const excelData = readExcelFile(excelFilePath);
+    const excelData = await readExcelFile(excelFilePath);
     console.log(excelData)
     const preparedData = prepareData(excelData);
-    //await insertDataToPostgres(preparedData);
+    await insertDataToPostgres(preparedData);
 };
 
 main();
