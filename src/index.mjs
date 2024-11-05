@@ -7,24 +7,24 @@ import fs from "fs/promises"
 
 
 const { Client } = pkg;
-
-
-
 const dbConnectionString = 'postgresql://postgres:MuXbouQYXoElGUtJSwUcGjYujBZiImza@autorack.proxy.rlwy.net:29904/railway';
-
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const excelFilePath = path.join(__dirname, '../data/PL_separated_by_comma_updated.txt');
+const excelFilePath = path.join(__dirname, '../data/PL_separated_by_comma_output.txt');
 
 
 const readExcelFile = async (filePath) => {
     try {
         // Leer el archivo
         const data = await fs.readFile(filePath, 'utf8');
+
+        //separar el contenido por lineas
+
+        const line = data.split('\n');
         
         // Separar el contenido por comas
-        const datosSeparados = data.split(',');
+        //const datosSeparados = data.split(',');
+        const datosSeparados = line.map(line => line.split(','));
 
         // Imprimir los datos separados
         return datosSeparados
@@ -39,24 +39,26 @@ const prepareData = (data) => {
    
     return data.map(row => {
        
-        const item = row.replace(/(\r\n|\n|\r)/gm, "").trim()
-        const subjectId = item.includes('PL/') ? item.split("/")[1] : ""
-      
+        const pl = row[0].replace(/(\r\n|\n|\r)/gm, "").trim();
+        const subjectId = pl.includes('PL/') ? pl.split("/")[1] : "";
+        const [item, type, socialReason , brand , group , address , city , postalCode , state , municipality] = row.map(item => item.trim())
+        
+    
    
         return {
-            pl: item,
-            type: "",
-            socialReason: "",
-            brand: "",
-            group: "",
+            pl: pl,
+            type: type,
+            socialReason: socialReason,
+            brand: brand,
+            group: group,
             subjectId: subjectId,
             neo: "",
             mp: "",
-            address: "",
-            city: "",
-            postalCode: "",
-            state: "",
-            municipality: ""
+            address: address,
+            city: city,
+            postalCode: postalCode,
+            state: state,
+            municipality: municipality
         };
     });
    
