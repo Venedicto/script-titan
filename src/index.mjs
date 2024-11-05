@@ -62,7 +62,7 @@ const insertDataToPostgres = async (data) => {
   
         for (const row of data) {
             await client.query(`
-                INSERT INTO table_name (pl, type, socialReason, brand, "group", subjectId, neo, mp, address, city, postalCode, state, municipality)
+                INSERT INTO public.'Subjects' (pl, type, socialReason, brand, "group", subjectId, neo, mp, address, city, postalCode, state, municipality)
                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
             `, [
                 row.pl, row.type, row.socialReason, row.brand, row.group, row.subjectId,
