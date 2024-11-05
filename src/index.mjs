@@ -73,18 +73,16 @@ const insertDataToPostgres = async (data) => {
         await client.connect();
 
         for (const row of data) {
-            console.log(row)
-            //console.log("ingresando pl" , row.pl)
-            //console.log(row)
-            // await client.query(`
-            //         INSERT INTO "Subjects" (pl, type, "socialReason", brand, "group", "subjectId", neo, mp, address, city, "postalCode", state, municipality)
-            //         VALUES 
-            //         ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13);
-            // `, [
-            //     row.pl, row.type, row.socialReason, row.brand, row.group, row.subjectId,
-            //     row.neo, row.mp, row.address, row.city, row.postalCode, row.state, row.municipality
-            // ]);
-            //console.log("se agrego el pl")
+            console.log("Ingresando Data", row.pl)
+            await client.query(`
+                    INSERT INTO "Subjects" (pl, type, "socialReason", brand, "group", "subjectId", neo, mp, address, city, "postalCode", state, municipality)
+                    VALUES 
+                    ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13);
+            `, [
+                row.pl, row.type, row.socialReason, row.brand, row.group, row.subjectId,
+                row.neo, row.mp, row.address, row.city, row.postalCode, row.state, row.municipality
+            ]);
+            console.log("se agrego el pl")
         }
 
         console.log("Proceso exitoso.");
