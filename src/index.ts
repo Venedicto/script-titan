@@ -1,5 +1,4 @@
 import xlsx from 'xlsx';
-//import { Client } from 'pg';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import pkg from 'pg';
@@ -7,10 +6,11 @@ import fs from "fs/promises"
 
 
 const { Client } = pkg;
-const dbConnectionString = 'postgresql://postgres:MuXbouQYXoElGUtJSwUcGjYujBZiImza@autorack.proxy.rlwy.net:29904/railway';
+const dbConnectionString = 'postgresql://postgres:PcslsggIrqeRlxHqGJXlKPvLsHYpWwgi@junction.proxy.rlwy.net:23442/railway';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const excelFilePath = path.join(__dirname, '../data/PL_separated_by_comma_output.txt');
+const excelFilePath = path.join(__dirname, '../data/padron_formateado.txt');
+
 
 
 const readExcelFile = async (filePath) => {
@@ -47,18 +47,18 @@ const prepareData = (data) => {
    
         return {
             pl: pl,
-            type: type,
-            socialReason: socialReason,
-            brand: brand,
-            group: group,
+            type: type || "",
+            socialReason: socialReason || "",
+            brand: brand || "",
+            group: group || "",
             subjectId: subjectId,
             neo: "",
             mp: "",
-            address: address,
-            city: city,
-            postalCode: postalCode,
-            state: state,
-            municipality: municipality
+            address: address || "",
+            city: city || "",
+            postalCode: postalCode || "",
+            state: state || "",
+            municipality: municipality || ""
         };
     });
    
