@@ -1,24 +1,24 @@
 {
-  "name": "scrip-solstice",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run src/script.ts"
-  },
-  "author": "lucas",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "@googlemaps/google-maps-services-js": "^3.4.0",
-    "@types/pg": "^8.11.10",
-    "mssql": "^11.0.1",
-    "p-limit": "^6.2.0",
-    "pg": "^8.13.1",
-    "pg-promise": "^11.10.2",
-    "xlsx": "^0.18.5"
-  },
-  "devDependencies": {
-    "@types/bun": "^1.2.0"
-  }
+	"name": "scrip-solstice",
+	"version": "1.0.0",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"dev": "node src/script.ts"
+	},
+	"author": "lucas",
+	"license": "ISC",
+	"description": "",
+	"dependencies": {
+		"@googlemaps/google-maps-services-js": "^3.4.0",
+		"@types/pg": "^8.11.10",
+		"mssql": "^11.0.1",
+		"p-limit": "^6.2.0",
+		"pg": "^8.13.1",
+		"pg-promise": "^11.10.2",
+		"xlsx": "^0.18.5"
+	},
+	"devDependencies": {
+		"@types/bun": "^1.2.0"
+	}
 }
